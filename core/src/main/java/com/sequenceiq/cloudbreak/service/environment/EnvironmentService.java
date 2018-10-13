@@ -21,8 +21,12 @@ import com.sequenceiq.cloudbreak.authorization.WorkspaceResource;
 import com.sequenceiq.cloudbreak.controller.exception.BadRequestException;
 import com.sequenceiq.cloudbreak.controller.exception.NotFoundException;
 import com.sequenceiq.cloudbreak.controller.validation.ValidationResult;
+import com.sequenceiq.cloudbreak.controller.validation.environment.EnvironmentAttachValidator;
 import com.sequenceiq.cloudbreak.controller.validation.environment.EnvironmentCreationValidator;
 import com.sequenceiq.cloudbreak.domain.Credential;
+import com.sequenceiq.cloudbreak.domain.LdapConfig;
+import com.sequenceiq.cloudbreak.domain.ProxyConfig;
+import com.sequenceiq.cloudbreak.domain.RDSConfig;
 import com.sequenceiq.cloudbreak.domain.environment.Environment;
 import com.sequenceiq.cloudbreak.repository.environment.EnvironmentRepository;
 import com.sequenceiq.cloudbreak.repository.workspace.WorkspaceResourceRepository;
@@ -51,6 +55,9 @@ public class EnvironmentService extends AbstractWorkspaceAwareResourceService<En
 
     @Inject
     private EnvironmentCreationValidator environmentCreationValidator;
+
+    @Inject
+    private EnvironmentAttachValidator environmentAttachValidator;
 
     @Inject
     private EnvironmentViewService environmentViewService;
@@ -104,7 +111,27 @@ public class EnvironmentService extends AbstractWorkspaceAwareResourceService<En
     }
 
     public DetailedEnvironmentResponse attachResources(String environmentName, EnvironmentAttachRequest request, Long workspaceId) {
-        return null;
+        Set<LdapConfig> ldapsToAttach = ldapConfigService.findByNamesInWorkspace(request.getLdapConfigs(), workspaceId);
+        Set<ProxyConfig> proxiesToAttach = proxyConfigService.findByNamesInWorkspace(request.getProxyConfigs(), workspaceId);
+        Set<RDSConfig> rdssToAttach = rdsConfigService.findByNamesInWorkspace(request.getRdsConfigs(), workspaceId);
+        ValidationResult validationResult = environmentAttachValidator.validate(request, ldapsToAttach, proxiesToAttach, rdssToAttach);
+        if (validationResult.hasError()) {
+            throw new BadRequestException(validationResult.getFormattedErrors());
+        }
+        Environment environment = getByNameForWorkspaceId(environmentName, workspaceId);
+        environment = doAttach(ldapsToAttach, proxiesToAttach, rdssToAttach, environment);
+        return conversionService.convert(environment, DetailedEnvironmentResponse.class);
+    }
+
+    private Environment doAttach(Set<LdapConfig> ldapsToAttach, Set<ProxyConfig> proxiesToAttach, Set<RDSConfig> rdssToAttach, Environment environment) {
+        ldapsToAttach.removeAll(environment.getLdapConfigs());
+        environment.getLdapConfigs().addAll(ldapsToAttach);
+        proxiesToAttach.removeAll(environment.getProxyConfigs());
+        environment.getProxyConfigs().addAll(proxiesToAttach);
+        rdssToAttach.removeAll(environment.getRdsConfigs());
+        environment.getRdsConfigs().addAll(rdssToAttach);
+        environment = environmentRepository.save(environment);
+        return environment;
     }
 
     public DetailedEnvironmentResponse detachResources(String environmentName, EnvironmentAttachRequest request, Long workspaceId) {

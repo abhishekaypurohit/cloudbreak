@@ -59,7 +59,7 @@ public class EnvironmentV3Controller implements EnvironmentV3Endpoint {
 
     @Override
     public DetailedEnvironmentResponse attachResources(Long workspaceId, String environmentName, @Valid EnvironmentAttachRequest request) {
-        return null;
+        return environmentService.attachResources(environmentName, request, workspaceId);
     }
 
     // TODO: finish
