@@ -43,8 +43,8 @@ public class StackView extends CompactView {
     public StackView() {
     }
 
-    public StackView(Long id, String name, String owner, String cloudPlatform, StackStatusView stackStatus) {
-        super(id, name, owner);
+    public StackView(Long id, String name, String cloudPlatform, StackStatusView stackStatus) {
+        super(id, name);
         this.cloudPlatform = cloudPlatform;
         this.stackStatus = stackStatus;
     }

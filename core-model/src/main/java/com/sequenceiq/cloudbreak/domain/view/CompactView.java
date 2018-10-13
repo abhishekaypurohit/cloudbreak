@@ -10,7 +10,6 @@ import com.sequenceiq.cloudbreak.domain.workspace.WorkspaceAwareResource;
 
 @MappedSuperclass
 public abstract class CompactView implements ProvisionEntity, WorkspaceAwareResource {
-    private String owner;
 
     @ManyToOne
     private Workspace workspace;
@@ -25,18 +24,9 @@ public abstract class CompactView implements ProvisionEntity, WorkspaceAwareReso
     public CompactView() {
     }
 
-    public CompactView(Long id, String name, String owner) {
+    public CompactView(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.owner = owner;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public Workspace getWorkspace() {

@@ -155,8 +155,6 @@ public class TestUtil {
         stack.setStackStatus(new StackStatus(stack, stackStatus, "statusReason", DetailedStackStatus.UNKNOWN));
         stack.setCredential(credential);
         stack.setName("simplestack");
-        stack.setOwner("userid");
-        stack.setAccount("account");
         stack.setId(1L);
         stack.setInstanceGroups(generateGcpInstanceGroups(3));
         stack.setRegion("region");

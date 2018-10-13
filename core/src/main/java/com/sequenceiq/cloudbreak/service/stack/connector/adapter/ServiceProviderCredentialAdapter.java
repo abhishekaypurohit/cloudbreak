@@ -51,8 +51,7 @@ public class ServiceProviderCredentialAdapter {
     private CredentialToExtendedCloudCredentialConverter extendedCloudCredentialConverter;
 
     public Credential init(Credential credential, Long workspaceId, String userId) {
-        CloudContext cloudContext = new CloudContext(credential.getId(), credential.getName(), credential.cloudPlatform(),
-                credential.getOwner(), userId, workspaceId);
+        CloudContext cloudContext = new CloudContext(credential.getId(), credential.getName(), credential.cloudPlatform(), userId, workspaceId);
         CloudCredential cloudCredential = credentialConverter.convert(credential);
 
         CredentialVerificationRequest request = new CredentialVerificationRequest(cloudContext, cloudCredential);
@@ -82,7 +81,7 @@ public class ServiceProviderCredentialAdapter {
 
     public Map<String, String> interactiveLogin(Credential credential, Long workspaceId, String userId) {
         CloudContext cloudContext = new CloudContext(credential.getId(), credential.getName(),
-                credential.cloudPlatform(), credential.getOwner(), userId, workspaceId);
+                credential.cloudPlatform(), userId, workspaceId);
         ExtendedCloudCredential cloudCredential = extendedCloudCredentialConverter.convert(credential);
         InteractiveLoginRequest request = new InteractiveLoginRequest(cloudContext, cloudCredential);
         LOGGER.info("Triggering event: {}", request);

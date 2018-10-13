@@ -20,7 +20,7 @@ import com.sequenceiq.cloudbreak.domain.json.JsonToString;
 import com.sequenceiq.cloudbreak.domain.workspace.Workspace;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"account", "name"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"workspace_id", "name"}))
 public class Template implements ProvisionEntity {
 
     @Id
@@ -36,12 +36,6 @@ public class Template implements ProvisionEntity {
 
     @Column(nullable = false)
     private String instanceType;
-
-    @Column(nullable = false)
-    private String owner;
-
-    @Column(nullable = false)
-    private String account;
 
     @Column(nullable = false)
     private Integer volumeCount;
@@ -110,22 +104,6 @@ public class Template implements ProvisionEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
     }
 
     public Integer getVolumeCount() {

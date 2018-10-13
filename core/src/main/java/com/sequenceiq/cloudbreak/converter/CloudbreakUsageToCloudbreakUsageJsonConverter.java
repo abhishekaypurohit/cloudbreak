@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.sequenceiq.cloudbreak.api.model.CloudbreakUsageJson;
 import com.sequenceiq.cloudbreak.api.model.UsageStatus;
-import com.sequenceiq.cloudbreak.common.service.user.UserFilterField;
 import com.sequenceiq.cloudbreak.domain.CloudbreakUsage;
 import com.sequenceiq.cloudbreak.service.usages.UsageTimeService;
 import com.sequenceiq.cloudbreak.service.user.CachedUserDetailsService;
@@ -33,13 +32,7 @@ public class CloudbreakUsageToCloudbreakUsageJsonConverter extends AbstractConve
     public CloudbreakUsageJson convert(CloudbreakUsage entity) {
         CloudbreakUsageJson json = new CloudbreakUsageJson();
         String day = new SimpleDateFormat(DATE_FORMAT).format(entity.getDay());
-        String cbUser;
-        try {
-            cbUser = cachedUserDetailsService.getDetails(entity.getOwner(), UserFilterField.USERID).getUsername();
-        } catch (Exception ignored) {
-            LOGGER.warn("Expected user was not found with '{}' id. Maybe it was deleted by the admin user.", entity.getOwner());
-            cbUser = entity.getOwner();
-        }
+        String cbUser = entity.getOwner();
         json.setOwner(entity.getOwner());
         json.setAccount(entity.getAccount());
         json.setProvider(entity.getProvider());

@@ -14,6 +14,4 @@ public interface WorkspaceAwareResource {
     void setWorkspace(Workspace workspace);
 
     WorkspaceResource getResource();
-
-    String getOwner();
 }

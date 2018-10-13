@@ -97,8 +97,6 @@ public class UsageGeneratorService {
         CloudbreakUsage usage = new CloudbreakUsage();
         usage.setStackUuid(stack.getUuid());
         usage.setParentUuid(cloudbreakNodeConfig.getInstanceUUID());
-        usage.setOwner(stack.getOwner());
-        usage.setAccount(stack.getAccount());
         usage.setProvider(stack.cloudPlatform());
         usage.setRegion(stack.getRegion());
         usage.setAvailabilityZone(stack.getAvailabilityZone());

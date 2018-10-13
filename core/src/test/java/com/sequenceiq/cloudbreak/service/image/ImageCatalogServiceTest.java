@@ -48,7 +48,7 @@ import com.sequenceiq.cloudbreak.domain.workspace.Workspace;
 import com.sequenceiq.cloudbreak.domain.workspace.User;
 import com.sequenceiq.cloudbreak.repository.ImageCatalogRepository;
 import com.sequenceiq.cloudbreak.service.ComponentConfigProvider;
-import com.sequenceiq.cloudbreak.service.account.AccountPreferencesService;
+import com.sequenceiq.cloudbreak.service.account.EnabledCloudPlatformService;
 import com.sequenceiq.cloudbreak.service.workspace.WorkspaceService;
 import com.sequenceiq.cloudbreak.service.stack.StackService;
 import com.sequenceiq.cloudbreak.service.user.UserProfileHandler;
@@ -111,7 +111,7 @@ public class ImageCatalogServiceTest {
     private ImageCatalogRepository imageCatalogRepository;
 
     @Mock
-    private AccountPreferencesService accountPreferencesService;
+    private EnabledCloudPlatformService enabledCloudPlatformService;
 
     @Mock
     private UserProfileHandler userProfileHandler;
@@ -144,7 +144,7 @@ public class ImageCatalogServiceTest {
     public void beforeTest() throws Exception {
         setupImageCatalogProvider(CUSTOM_IMAGE_CATALOG_URL, V2_CATALOG_FILE);
 
-        when(accountPreferencesService.enabledPlatforms()).thenReturn(new HashSet<>(Arrays.asList("AZURE", "AWS", "GCP", "OPENSTACK")));
+        when(enabledCloudPlatformService.enabledPlatforms()).thenReturn(new HashSet<>(Arrays.asList("AZURE", "AWS", "GCP", "OPENSTACK")));
         when(cloudbreakUser.getUserId()).thenReturn("userid");
         when(cloudbreakUser.getAccount()).thenReturn("account");
 

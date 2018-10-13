@@ -1,11 +1,12 @@
 package com.sequenceiq.cloudbreak.converter.mapper;
 
+import javax.annotation.Generated;
+
 import com.sequenceiq.cloudbreak.api.model.AmbariDatabaseDetailsJson;
 import com.sequenceiq.cloudbreak.cloud.model.AmbariDatabase;
 import com.sequenceiq.cloudbreak.domain.RDSConfig;
 import com.sequenceiq.cloudbreak.domain.stack.Stack;
 import com.sequenceiq.cloudbreak.domain.stack.cluster.Cluster;
-import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor"
@@ -29,8 +30,6 @@ public class AmbariDatabaseMapperImpl implements AmbariDatabaseMapper {
         }
         if ( cluster != null ) {
             rDSConfig.setName( mapName( stack, cluster ) );
-            rDSConfig.setAccount( cluster.getAccount() );
-            rDSConfig.setOwner( cluster.getOwner() );
         }
         rDSConfig.setCreationDate( new java.util.Date().getTime() );
         rDSConfig.setType( com.sequenceiq.cloudbreak.api.model.rds.RdsType.AMBARI.name() );

@@ -20,7 +20,7 @@ import com.sequenceiq.cloudbreak.domain.json.Json;
 import com.sequenceiq.cloudbreak.domain.workspace.User;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"account", "owner"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
 public class UserProfile {
 
     @Id
@@ -30,12 +30,6 @@ public class UserProfile {
 
     @OneToOne
     private ImageCatalog imageCatalog;
-
-    @Column(nullable = false)
-    private String owner;
-
-    @Column(nullable = false)
-    private String account;
 
     @Column
     private String userName;
@@ -56,22 +50,6 @@ public class UserProfile {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
     }
 
     public String getUserName() {

@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecur
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
-import com.sequenceiq.cloudbreak.service.security.OwnerBasedPermissionEvaluator;
 import com.sequenceiq.cloudbreak.service.security.ScimAccountGroupReaderFilter;
 
 @Configuration
@@ -51,14 +50,9 @@ public class SecurityConfig {
     @EnableGlobalMethodSecurity(prePostEnabled = true)
     protected static class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-        @Inject
-        @Lazy
-        private OwnerBasedPermissionEvaluator ownerBasedPermissionEvaluator;
-
         @Override
         protected MethodSecurityExpressionHandler createExpressionHandler() {
             OAuth2MethodSecurityExpressionHandler expressionHandler = new OAuth2MethodSecurityExpressionHandler();
-            expressionHandler.setPermissionEvaluator(ownerBasedPermissionEvaluator);
             return expressionHandler;
         }
     }

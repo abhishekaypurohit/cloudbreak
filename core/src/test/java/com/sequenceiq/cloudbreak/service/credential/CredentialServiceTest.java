@@ -37,7 +37,7 @@ import com.sequenceiq.cloudbreak.domain.workspace.Workspace;
 import com.sequenceiq.cloudbreak.domain.stack.Stack;
 import com.sequenceiq.cloudbreak.repository.CredentialRepository;
 import com.sequenceiq.cloudbreak.repository.StackRepository;
-import com.sequenceiq.cloudbreak.service.account.AccountPreferencesService;
+import com.sequenceiq.cloudbreak.service.account.EnabledCloudPlatformService;
 import com.sequenceiq.cloudbreak.service.messages.CloudbreakMessagesService;
 import com.sequenceiq.cloudbreak.service.notification.NotificationSender;
 import com.sequenceiq.cloudbreak.service.workspace.WorkspaceService;
@@ -79,7 +79,7 @@ public class CredentialServiceTest {
     private NotificationSender notificationSender;
 
     @Mock
-    private AccountPreferencesService accountPreferencesService;
+    private EnabledCloudPlatformService enabledCloudPlatformService;
 
     @Mock
     private CloudbreakMessagesService messagesService;
@@ -111,7 +111,7 @@ public class CredentialServiceTest {
     public void init() {
         testCredential = mock(Credential.class);
         when(testCredential.getName()).thenReturn(TEST_CREDENTIAL_NAME);
-        when(accountPreferencesService.enabledPlatforms()).thenReturn(CLOUD_PLATFORMS);
+        when(enabledCloudPlatformService.enabledPlatforms()).thenReturn(CLOUD_PLATFORMS);
         when(testCredential.getWorkspace()).thenReturn(workspace);
         when(workspace.getId()).thenReturn(ORG_ID);
         when(workspace.getName()).thenReturn(TEST_WORKSPACE_NAME);
@@ -126,7 +126,7 @@ public class CredentialServiceTest {
         thrown.expectMessage(String.format("Credential with id: '%d' not found", TEST_CREDENTIAL_ID));
 
         credentialService.get(TEST_CREDENTIAL_ID, workspace);
-        verify(accountPreferencesService, times(1)).enabledPlatforms();
+        verify(enabledCloudPlatformService, times(1)).enabledPlatforms();
         verify(credentialRepository, times(1)).findActiveByIdAndWorkspaceFilterByPlatforms(TEST_CREDENTIAL_ID, ORG_ID, CLOUD_PLATFORMS);
     }
 
@@ -138,7 +138,7 @@ public class CredentialServiceTest {
         Credential result = credentialService.get(TEST_CREDENTIAL_ID, workspace);
 
         assertEquals(expected, result);
-        verify(accountPreferencesService, times(1)).enabledPlatforms();
+        verify(enabledCloudPlatformService, times(1)).enabledPlatforms();
         verify(credentialRepository, times(1)).findActiveByIdAndWorkspaceFilterByPlatforms(TEST_CREDENTIAL_ID, ORG_ID, CLOUD_PLATFORMS);
     }
 
@@ -161,7 +161,7 @@ public class CredentialServiceTest {
         credentialService.updateByWorkspaceId(ORG_ID, testCredential, user);
 
         verify(credentialRepository, times(0)).findActiveByNameAndWorkspaceIdFilterByPlatforms(anyString(), anyLong(), anyCollection());
-        verify(accountPreferencesService, times(0)).enabledPlatforms();
+        verify(enabledCloudPlatformService, times(0)).enabledPlatforms();
         verify(workspaceService, times(0)).get(anyLong(), any(User.class));
         verify(credentialAdapter, times(0)).init(any(Credential.class), anyLong(), anyString());
         verify(credentialRepository, times(0)).save(any());
@@ -178,7 +178,7 @@ public class CredentialServiceTest {
 
         verify(credentialRepository, times(1)).findActiveByNameAndWorkspaceIdFilterByPlatforms(anyString(), anyLong(), anyCollection());
         verify(credentialRepository, times(1)).findActiveByNameAndWorkspaceIdFilterByPlatforms(TEST_CREDENTIAL_NAME, ORG_ID, CLOUD_PLATFORMS);
-        verify(accountPreferencesService, times(1)).enabledPlatforms();
+        verify(enabledCloudPlatformService, times(1)).enabledPlatforms();
         verify(workspaceService, times(0)).get(anyLong(), any(User.class));
         verify(credentialAdapter, times(0)).init(any(Credential.class), anyLong(), anyString());
         verify(credentialRepository, times(0)).save(any());
@@ -199,7 +199,7 @@ public class CredentialServiceTest {
 
         verify(credentialRepository, times(1)).findActiveByNameAndWorkspaceIdFilterByPlatforms(anyString(), anyLong(), anyCollection());
         verify(credentialRepository, times(1)).findActiveByNameAndWorkspaceIdFilterByPlatforms(TEST_CREDENTIAL_NAME, ORG_ID, CLOUD_PLATFORMS);
-        verify(accountPreferencesService, times(1)).enabledPlatforms();
+        verify(enabledCloudPlatformService, times(1)).enabledPlatforms();
         verify(workspaceService, times(0)).get(anyLong(), any(User.class));
         verify(credentialAdapter, times(0)).init(any(Credential.class), anyLong(), anyString());
         verify(credentialRepository, times(0)).save(any());
@@ -221,7 +221,7 @@ public class CredentialServiceTest {
         assertEquals(saved, result);
         verify(credentialRepository, times(1)).findActiveByNameAndWorkspaceIdFilterByPlatforms(anyString(), anyLong(), anyCollection());
         verify(credentialRepository, times(1)).findActiveByNameAndWorkspaceIdFilterByPlatforms(TEST_CREDENTIAL_NAME, ORG_ID, CLOUD_PLATFORMS);
-        verify(accountPreferencesService, times(1)).enabledPlatforms();
+        verify(enabledCloudPlatformService, times(1)).enabledPlatforms();
         verify(workspaceService, times(2)).get(anyLong(), any(User.class));
         verify(workspaceService, times(2)).get(ORG_ID, user);
         verify(credentialAdapter, times(1)).init(any(Credential.class), anyLong(), anyString());
